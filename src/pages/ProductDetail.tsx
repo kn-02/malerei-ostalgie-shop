@@ -4,17 +4,72 @@ import { useParams, Link } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import ImageSlideshow from '../components/ImageSlideshow';
-import { getProductById } from '../data/products';
-import { ShoppingCart, ArrowLeft, Heart, Share2, Ruler, Calendar, Palette } from 'lucide-react';
+import { useProduct } from '../hooks/useProducts';
+import { useAddToCart } from '../hooks/useCart';
+import { useProductLikes, useToggleLike } from '../hooks/useProductLikes';
+import { useAuth } from '../hooks/useAuth';
+import { ShoppingCart, ArrowLeft, Heart, Share2, Ruler, Calendar, Palette, Loader } from 'lucide-react';
+import { toast } from 'sonner';
 
 const ProductDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState('description');
   
-  const product = getProductById(Number(id));
+  const { data: product, isLoading, error } = useProduct(id!);
+  const { data: likesData } = useProductLikes(id!);
+  const { user } = useAuth();
+  const addToCart = useAddToCart();
+  const toggleLike = useToggleLike();
 
-  if (!product) {
+  const handleAddToCart = async () => {
+    if (!user) {
+      toast.error('Bitte melden Sie sich an, um Artikel zum Warenkorb hinzuzufügen');
+      return;
+    }
+
+    if (!product) return;
+
+    try {
+      await addToCart.mutateAsync({ productId: product.id, quantity });
+      toast.success(`${quantity} Artikel zum Warenkorb hinzugefügt`);
+    } catch (error) {
+      toast.error('Fehler beim Hinzufügen zum Warenkorb');
+      console.error(error);
+    }
+  };
+
+  const handleToggleLike = async () => {
+    if (!user) {
+      toast.error('Bitte melden Sie sich an, um Artikel zu liken');
+      return;
+    }
+
+    if (!product) return;
+
+    try {
+      const result = await toggleLike.mutateAsync(product.id);
+      toast.success(result.liked ? 'Artikel geliked' : 'Like entfernt');
+    } catch (error) {
+      toast.error('Fehler beim Liken');
+      console.error(error);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="container mx-auto px-4 py-20 text-center">
+          <Loader className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Lade Kunstwerk...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error || !product) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
@@ -28,6 +83,10 @@ const ProductDetail = () => {
       </div>
     );
   }
+
+  const images = product.product_images?.map(img => 
+    `https://images.unsplash.com/${img.image_url}?w=800&h=600&fit=crop`
+  ) || [`https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop`];
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -49,12 +108,10 @@ const ProductDetail = () => {
       <section className="py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Image Slideshow */}
             <div>
-              <ImageSlideshow images={product.images} title={product.title} />
+              <ImageSlideshow images={images} title={product.title} />
             </div>
 
-            {/* Product Info */}
             <div className="space-y-6">
               <div>
                 <Link 
@@ -69,32 +126,37 @@ const ProductDetail = () => {
                 <p className="text-xl text-red-600 font-medium">von {product.artist}</p>
               </div>
 
-              {/* Quick Info */}
               <div className="grid grid-cols-3 gap-4 p-4 bg-gradient-to-r from-red-50 to-yellow-50 rounded-lg">
                 <div className="text-center">
                   <Calendar className="h-6 w-6 text-red-600 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Jahr</p>
-                  <p className="font-bold">{product.year}</p>
+                  <p className="font-bold">{product.year || 'Unbekannt'}</p>
                 </div>
                 <div className="text-center">
                   <Ruler className="h-6 w-6 text-red-600 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Maße</p>
-                  <p className="font-bold">{product.dimensions}</p>
+                  <p className="font-bold">{product.dimensions || 'Nicht angegeben'}</p>
                 </div>
                 <div className="text-center">
                   <Palette className="h-6 w-6 text-red-600 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Technik</p>
-                  <p className="font-bold">{product.technique}</p>
+                  <p className="font-bold">{product.technique || 'Nicht angegeben'}</p>
                 </div>
               </div>
 
-              {/* Price and Purchase */}
               <div className="bg-white p-6 rounded-lg border-2 border-red-200">
                 <div className="flex items-center justify-between mb-4">
                   <span className="text-3xl font-bold text-red-700">{product.price}€</span>
                   <div className="flex items-center space-x-2">
-                    <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
-                      <Heart className="h-5 w-5 text-gray-600" />
+                    <button 
+                      onClick={handleToggleLike}
+                      className={`p-2 border border-gray-300 rounded-lg transition-colors ${
+                        likesData?.isLiked 
+                          ? 'bg-red-500 text-white border-red-500' 
+                          : 'hover:bg-gray-50'
+                      }`}
+                    >
+                      <Heart className={`h-5 w-5 ${likesData?.isLiked ? 'fill-current' : 'text-gray-600'}`} />
                     </button>
                     <button className="p-2 border border-gray-300 rounded-lg hover:bg-gray-50">
                       <Share2 className="h-5 w-5 text-gray-600" />
@@ -102,7 +164,13 @@ const ProductDetail = () => {
                   </div>
                 </div>
 
-                {product.inStock ? (
+                {likesData && likesData.totalLikes > 0 && (
+                  <div className="mb-4 text-sm text-gray-600">
+                    {likesData.totalLikes} {likesData.totalLikes === 1 ? 'Person gefällt' : 'Personen gefällt'} dieses Kunstwerk
+                  </div>
+                )}
+
+                {product.in_stock ? (
                   <div className="space-y-4">
                     <div className="flex items-center space-x-4">
                       <label className="text-gray-700 font-medium">Anzahl:</label>
@@ -123,9 +191,12 @@ const ProductDetail = () => {
                       </div>
                     </div>
                     
-                    <button className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 rounded-lg font-bold hover:from-red-700 hover:to-red-800 transition-all duration-200 flex items-center justify-center space-x-2">
+                    <button 
+                      onClick={handleAddToCart}
+                      className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 rounded-lg font-bold hover:from-red-700 hover:to-red-800 transition-all duration-200 flex items-center justify-center space-x-2"
+                    >
                       <ShoppingCart className="h-5 w-5" />
-                      <span>In den Warenkorb ({(product.price * quantity)}€)</span>
+                      <span>In den Warenkorb ({(parseFloat(product.price.toString()) * quantity).toFixed(2)}€)</span>
                     </button>
                   </div>
                 ) : (
@@ -138,10 +209,11 @@ const ProductDetail = () => {
                 )}
               </div>
 
-              {/* Category Badge */}
-              <div className="inline-block bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">
-                {product.category}
-              </div>
+              {product.category && (
+                <div className="inline-block bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">
+                  {product.category}
+                </div>
+              )}
             </div>
           </div>
 
@@ -186,7 +258,7 @@ const ProductDetail = () => {
               {activeTab === 'description' && (
                 <div className="prose max-w-none">
                   <p className="text-lg text-gray-700 leading-relaxed">
-                    {product.longDescription}
+                    {product.long_description || product.description || 'Keine Beschreibung verfügbar.'}
                   </p>
                 </div>
               )}
@@ -198,10 +270,10 @@ const ProductDetail = () => {
                     <ul className="space-y-2">
                       <li><strong>Titel:</strong> {product.title}</li>
                       <li><strong>Künstler:</strong> {product.artist}</li>
-                      <li><strong>Jahr:</strong> {product.year}</li>
-                      <li><strong>Maße:</strong> {product.dimensions}</li>
-                      <li><strong>Technik:</strong> {product.technique}</li>
-                      <li><strong>Kategorie:</strong> {product.category}</li>
+                      <li><strong>Jahr:</strong> {product.year || 'Unbekannt'}</li>
+                      <li><strong>Maße:</strong> {product.dimensions || 'Nicht angegeben'}</li>
+                      <li><strong>Technik:</strong> {product.technique || 'Nicht angegeben'}</li>
+                      <li><strong>Kategorie:</strong> {product.category || 'Nicht kategorisiert'}</li>
                     </ul>
                   </div>
                   <div>

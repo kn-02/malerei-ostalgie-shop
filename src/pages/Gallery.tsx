@@ -2,19 +2,21 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
-import ProductCard from '../components/ProductCard';
-import { products } from '../data/products';
-import { Filter, Grid, List } from 'lucide-react';
+import SupabaseProductCard from '../components/SupabaseProductCard';
+import { useProducts } from '../hooks/useProducts';
+import { Filter, Grid, List, Loader } from 'lucide-react';
 
 const Gallery = () => {
   const [selectedCategory, setSelectedCategory] = useState('alle');
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [sortBy, setSortBy] = useState('name');
+  const [sortBy, setSortBy] = useState('title');
+  
+  const { data: products = [], isLoading, error } = useProducts();
 
   const categories = [
     'alle',
     'Sozialistischer Realismus',
-    'Stadtansichten',
+    'Stadtansichten', 
     'Genremalerei',
     'Kinder und Jugend',
     'Architektur',
@@ -27,18 +29,43 @@ const Gallery = () => {
 
   const sortedProducts = [...filteredProducts].sort((a, b) => {
     switch (sortBy) {
-      case 'name':
+      case 'title':
         return a.title.localeCompare(b.title);
       case 'price-low':
-        return a.price - b.price;
+        return parseFloat(a.price.toString()) - parseFloat(b.price.toString());
       case 'price-high':
-        return b.price - a.price;
+        return parseFloat(b.price.toString()) - parseFloat(a.price.toString());
       case 'year':
-        return b.year - a.year;
+        return (b.year || 0) - (a.year || 0);
       default:
         return 0;
     }
   });
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="container mx-auto px-4 py-20 text-center">
+          <Loader className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <p className="text-gray-600">Lade Kunstwerke...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="container mx-auto px-4 py-20 text-center">
+          <p className="text-red-600">Fehler beim Laden der Kunstwerke</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -58,7 +85,6 @@ const Gallery = () => {
       <section className="bg-white border-b py-6">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            {/* Category Filter */}
             <div className="flex items-center space-x-4">
               <Filter className="h-5 w-5 text-gray-600" />
               <select 
@@ -74,14 +100,13 @@ const Gallery = () => {
               </select>
             </div>
 
-            {/* Sort and View Options */}
             <div className="flex items-center space-x-4">
               <select 
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
               >
-                <option value="name">Nach Name</option>
+                <option value="title">Nach Name</option>
                 <option value="price-low">Preis aufsteigend</option>
                 <option value="price-high">Preis absteigend</option>
                 <option value="year">Nach Jahr</option>
@@ -123,7 +148,7 @@ const Gallery = () => {
           }`}>
             {sortedProducts.map((product) => (
               <div key={product.id} className={viewMode === 'list' ? 'max-w-4xl mx-auto' : ''}>
-                <ProductCard product={product} />
+                <SupabaseProductCard product={product} />
               </div>
             ))}
           </div>
