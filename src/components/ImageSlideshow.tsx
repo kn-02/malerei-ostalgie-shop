@@ -1,0 +1,131 @@
+
+import React, { useState, useEffect } from 'react';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+
+interface ImageSlideshowProps {
+  images: string[];
+  title: string;
+}
+
+const ImageSlideshow: React.FC<ImageSlideshowProps> = ({ images, title }) => {
+  const [currentImage, setCurrentImage] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+
+  useEffect(() => {
+    if (!isAutoPlaying) return;
+    
+    const interval = setInterval(() => {
+      setCurrentImage((prev) => (prev + 1) % images.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [images.length, isAutoPlaying]);
+
+  const nextImage = () => {
+    setCurrentImage((prev) => (prev + 1) % images.length);
+    setIsAutoPlaying(false);
+  };
+
+  const prevImage = () => {
+    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
+    setIsAutoPlaying(false);
+  };
+
+  const goToImage = (index: number) => {
+    setCurrentImage(index);
+    setIsAutoPlaying(false);
+  };
+
+  return (
+    <div className="relative bg-gradient-to-br from-red-50 to-yellow-50 rounded-lg overflow-hidden shadow-xl">
+      {/* Main image display */}
+      <div className="relative h-96 md:h-[500px] overflow-hidden">
+        <div 
+          className="flex transition-transform duration-500 ease-in-out h-full"
+          style={{ transform: `translateX(-${currentImage * 100}%)` }}
+        >
+          {images.map((image, index) => (
+            <div key={index} className="w-full flex-shrink-0 relative">
+              <img 
+                src={`https://images.unsplash.com/${image}?w=800&h=600&fit=crop`}
+                alt={`${title} - Ansicht ${index + 1}`}
+                className="w-full h-full object-cover"
+                style={{
+                  filter: 'sepia(15%) saturate(120%) contrast(110%) brightness(95%)'
+                }}
+              />
+              {/* DDR-style film grain overlay */}
+              <div 
+                className="absolute inset-0 opacity-20 mix-blend-multiply"
+                style={{
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3CfeColorMatrix in='turbulence' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
+                }}
+              ></div>
+            </div>
+          ))}
+        </div>
+
+        {/* Navigation arrows */}
+        <button 
+          onClick={prevImage}
+          className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors duration-200"
+        >
+          <ChevronLeft className="h-6 w-6" />
+        </button>
+        <button 
+          onClick={nextImage}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full hover:bg-black/70 transition-colors duration-200"
+        >
+          <ChevronRight className="h-6 w-6" />
+        </button>
+
+        {/* Image counter */}
+        <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-bold">
+          {currentImage + 1} / {images.length}
+        </div>
+      </div>
+
+      {/* Thumbnail navigation */}
+      <div className="p-4 bg-gradient-to-r from-red-100 to-yellow-100">
+        <div className="flex space-x-2 overflow-x-auto">
+          {images.map((image, index) => (
+            <button
+              key={index}
+              onClick={() => goToImage(index)}
+              className={`flex-shrink-0 w-16 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                currentImage === index 
+                  ? 'border-red-600 shadow-lg scale-110' 
+                  : 'border-gray-300 hover:border-red-400'
+              }`}
+            >
+              <img 
+                src={`https://images.unsplash.com/${image}?w=100&h=100&fit=crop`}
+                alt={`Thumbnail ${index + 1}`}
+                className="w-full h-full object-cover"
+                style={{
+                  filter: 'sepia(10%) saturate(110%)'
+                }}
+              />
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* Auto-play indicator */}
+      <div className="absolute bottom-4 left-4">
+        <button
+          onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+          className={`px-3 py-1 rounded-full text-xs font-bold transition-colors duration-200 ${
+            isAutoPlaying 
+              ? 'bg-green-600 text-white' 
+              : 'bg-gray-600 text-white'
+          }`}
+        >
+          {isAutoPlaying ? 'Auto' : 'Manual'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+export default ImageSlideshow;
