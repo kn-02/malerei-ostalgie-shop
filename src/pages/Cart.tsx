@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Link } from 'react-router-dom';
 import Header from '../components/Header';
@@ -7,13 +6,6 @@ import { Plus, Minus, Trash2, ShoppingBag, Loader } from 'lucide-react';
 import { useCart, useUpdateCartItem, useRemoveFromCart } from '@/hooks/useCart';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'sonner';
-import type { Database } from '@/integrations/supabase/types';
-
-type CartItem = Database['public']['Tables']['cart_items']['Row'] & {
-  product: Database['public']['Tables']['products']['Row'] & {
-    product_images: Database['public']['Tables']['product_images']['Row'][];
-  };
-};
 
 const Cart = () => {
   const { user } = useAuth();

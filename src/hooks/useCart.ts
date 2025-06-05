@@ -1,10 +1,13 @@
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from './useAuth';
 import type { Database } from '@/integrations/supabase/types';
 
 type CartItem = Database['public']['Tables']['cart_items']['Row'] & {
-  product: Database['public']['Tables']['products']['Row'];
+  product: Database['public']['Tables']['products']['Row'] & {
+    product_images: Database['public']['Tables']['product_images']['Row'][];
+  };
 };
 
 export const useCart = () => {
@@ -19,7 +22,10 @@ export const useCart = () => {
         .from('cart_items')
         .select(`
           *,
-          product:products (*)
+          product:products (
+            *,
+            product_images (*)
+          )
         `)
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
