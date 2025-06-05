@@ -2,44 +2,24 @@
 import React, { useState } from 'react';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
+import { Filter } from 'lucide-react';
 import SupabaseProductCard from '../components/SupabaseProductCard';
-import { useProducts } from '../hooks/useProducts';
-import { Filter, Grid, List, Loader } from 'lucide-react';
+import { useProducts } from '@/hooks/useProducts';
 
 const Gallery = () => {
-  const [selectedCategory, setSelectedCategory] = useState('alle');
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  const [sortBy, setSortBy] = useState('title');
-  
   const { data: products = [], isLoading, error } = useProducts();
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [priceRange, setPriceRange] = useState({ min: '', max: '' });
 
-  const categories = [
-    'alle',
-    'Sozialistischer Realismus',
-    'Stadtansichten', 
-    'Genremalerei',
-    'Kinder und Jugend',
-    'Architektur',
-    'Landwirtschaft'
-  ];
+  const categories = [...new Set(products.map(p => p.category).filter(Boolean))];
 
-  const filteredProducts = products.filter(product => 
-    selectedCategory === 'alle' || product.category === selectedCategory
-  );
-
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    switch (sortBy) {
-      case 'title':
-        return a.title.localeCompare(b.title);
-      case 'price-low':
-        return parseFloat(a.price.toString()) - parseFloat(b.price.toString());
-      case 'price-high':
-        return parseFloat(b.price.toString()) - parseFloat(a.price.toString());
-      case 'year':
-        return (b.year || 0) - (a.year || 0);
-      default:
-        return 0;
-    }
+  const filteredProducts = products.filter(product => {
+    const matchesCategory = !selectedCategory || product.category === selectedCategory;
+    const price = parseFloat(product.price.toString());
+    const matchesMinPrice = !priceRange.min || price >= parseFloat(priceRange.min);
+    const matchesMaxPrice = !priceRange.max || price <= parseFloat(priceRange.max);
+    
+    return matchesCategory && matchesMinPrice && matchesMaxPrice && product.in_stock;
   });
 
   if (isLoading) {
@@ -47,8 +27,7 @@ const Gallery = () => {
       <div className="min-h-screen bg-gray-50">
         <Header />
         <div className="container mx-auto px-4 py-20 text-center">
-          <Loader className="h-8 w-8 animate-spin mx-auto mb-4" />
-          <p className="text-gray-600">Lade Kunstwerke...</p>
+          <p className="text-gray-600">Lade Galerie...</p>
         </div>
         <Footer />
       </div>
@@ -60,7 +39,8 @@ const Gallery = () => {
       <div className="min-h-screen bg-gray-50">
         <Header />
         <div className="container mx-auto px-4 py-20 text-center">
-          <p className="text-red-600">Fehler beim Laden der Kunstwerke</p>
+          <h1 className="text-2xl text-gray-600">Fehler beim Laden der Galerie</h1>
+          <p className="text-gray-500 mt-4">{error.message}</p>
         </div>
         <Footer />
       </div>
@@ -72,92 +52,80 @@ const Gallery = () => {
       <Header />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-r from-red-800 via-red-700 to-yellow-600 text-white py-20">
+      <section className="bg-gradient-to-r from-red-800 via-red-700 to-yellow-600 text-white py-16">
         <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">Kunstgalerie</h1>
-          <p className="text-xl text-yellow-200 max-w-2xl mx-auto">
-            Entdecken Sie unsere komplette Sammlung authentischer DDR-Gemälde
+          <h1 className="text-4xl font-bold mb-4">Galerie</h1>
+          <p className="text-xl text-yellow-200">
+            Entdecken Sie unsere einzigartige Sammlung von DDR-Kunstwerken
           </p>
         </div>
       </section>
 
-      {/* Filter and Sort Section */}
-      <section className="bg-white border-b py-6">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0">
-            <div className="flex items-center space-x-4">
-              <Filter className="h-5 w-5 text-gray-600" />
-              <select 
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              >
-                {categories.map(category => (
-                  <option key={category} value={category}>
-                    {category === 'alle' ? 'Alle Kategorien' : category}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="flex items-center space-x-4">
-              <select 
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-              >
-                <option value="title">Nach Name</option>
-                <option value="price-low">Preis aufsteigend</option>
-                <option value="price-high">Preis absteigend</option>
-                <option value="year">Nach Jahr</option>
-              </select>
-
-              <div className="flex border border-gray-300 rounded-lg overflow-hidden">
-                <button 
-                  onClick={() => setViewMode('grid')}
-                  className={`p-2 ${viewMode === 'grid' ? 'bg-red-600 text-white' : 'bg-white text-gray-600'}`}
-                >
-                  <Grid className="h-5 w-5" />
-                </button>
-                <button 
-                  onClick={() => setViewMode('list')}
-                  className={`p-2 ${viewMode === 'list' ? 'bg-red-600 text-white' : 'bg-white text-gray-600'}`}
-                >
-                  <List className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Products Grid */}
       <section className="py-12">
         <div className="container mx-auto px-4">
-          <div className="mb-8">
-            <p className="text-gray-600">
-              {sortedProducts.length} Kunstwerk{sortedProducts.length !== 1 ? 'e' : ''} gefunden
-              {selectedCategory !== 'alle' && ` in "${selectedCategory}"`}
-            </p>
-          </div>
-
-          <div className={`grid gap-8 ${
-            viewMode === 'grid' 
-              ? 'grid-cols-1 md:grid-cols-2 lg:grid-cols-3' 
-              : 'grid-cols-1'
-          }`}>
-            {sortedProducts.map((product) => (
-              <div key={product.id} className={viewMode === 'list' ? 'max-w-4xl mx-auto' : ''}>
-                <SupabaseProductCard product={product} />
+          {/* Filters */}
+          <div className="bg-white rounded-lg shadow-lg p-6 mb-8">
+            <div className="flex items-center space-x-4 mb-4">
+              <Filter className="h-5 w-5 text-gray-600" />
+              <h2 className="text-lg font-bold text-gray-800">Filter</h2>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Kategorie</label>
+                <select 
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                >
+                  <option value="">Alle Kategorien</option>
+                  {categories.map(category => (
+                    <option key={category} value={category}>{category}</option>
+                  ))}
+                </select>
               </div>
-            ))}
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Mindestpreis (€)</label>
+                <input 
+                  type="number"
+                  value={priceRange.min}
+                  onChange={(e) => setPriceRange({...priceRange, min: e.target.value})}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="0"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">Höchstpreis (€)</label>
+                <input 
+                  type="number"
+                  value={priceRange.max}
+                  onChange={(e) => setPriceRange({...priceRange, max: e.target.value})}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
+                  placeholder="Unbegrenzt"
+                />
+              </div>
+            </div>
           </div>
 
-          {sortedProducts.length === 0 && (
-            <div className="text-center py-20">
-              <p className="text-xl text-gray-600">
-                Keine Kunstwerke in dieser Kategorie gefunden.
-              </p>
+          {/* Results */}
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-2xl font-bold text-gray-800">
+              {filteredProducts.length} Kunstwerke gefunden
+            </h2>
+          </div>
+
+          {filteredProducts.length === 0 ? (
+            <div className="text-center py-12">
+              <p className="text-xl text-gray-600 mb-4">Keine Kunstwerke gefunden</p>
+              <p className="text-gray-500">Versuchen Sie andere Filtereinstellungen</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {filteredProducts.map((product) => (
+                <SupabaseProductCard key={product.id} product={product} />
+              ))}
             </div>
           )}
         </div>

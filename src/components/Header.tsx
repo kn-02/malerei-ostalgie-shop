@@ -4,9 +4,11 @@ import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react';
 import AuthButton from './AuthButton';
 import CartIcon from './CartIcon';
+import { useIsAdmin } from '@/hooks/useUserRole';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const isAdmin = useIsAdmin();
 
   return (
     <header className="bg-gradient-to-r from-red-800 via-red-700 to-yellow-600 text-white shadow-lg">
@@ -32,6 +34,11 @@ const Header = () => {
             <Link to="/kontakt" className="hover:text-yellow-300 transition-colors">
               Kontakt
             </Link>
+            {isAdmin && (
+              <Link to="/dashboard" className="hover:text-yellow-300 transition-colors">
+                Dashboard
+              </Link>
+            )}
           </nav>
 
           {/* Right side - Auth and Cart */}
@@ -81,6 +88,15 @@ const Header = () => {
               >
                 Kontakt
               </Link>
+              {isAdmin && (
+                <Link 
+                  to="/dashboard" 
+                  className="hover:text-yellow-300 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  Dashboard
+                </Link>
+              )}
               <div className="flex items-center justify-between pt-4 border-t border-red-600">
                 <CartIcon />
                 <AuthButton />

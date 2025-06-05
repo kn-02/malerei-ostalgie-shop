@@ -1,21 +1,28 @@
 
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { Plus, Edit, Trash2, Upload, Eye, DollarSign, Package, Users } from 'lucide-react';
-import { products as initialProducts } from '../data/products';
+import { useProducts, useCreateProduct, useDeleteProduct } from '@/hooks/useProducts';
+import { useAuth } from '@/hooks/useAuth';
+import { useIsAdmin } from '@/hooks/useUserRole';
+import { toast } from 'sonner';
 
 const Dashboard = () => {
-  const [products, setProducts] = useState(initialProducts);
+  const { user } = useAuth();
+  const isAdmin = useIsAdmin();
+  const { data: products = [], isLoading } = useProducts();
+  const createProduct = useCreateProduct();
+  const deleteProduct = useDeleteProduct();
+  
   const [showAddForm, setShowAddForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<number | null>(null);
-
   const [newProduct, setNewProduct] = useState({
     title: '',
     artist: '',
     price: '',
     description: '',
-    longDescription: '',
+    long_description: '',
     year: '',
     dimensions: '',
     technique: '',
@@ -23,51 +30,99 @@ const Dashboard = () => {
     images: ['']
   });
 
+  // Redirect if not authenticated or not admin
+  if (!user) {
+    return <Navigate to="/auth" replace />;
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <section className="py-20">
+          <div className="container mx-auto px-4 text-center">
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">Zugriff verweigert</h1>
+            <p className="text-gray-600 mb-8">Sie haben keine Berechtigung, auf das Dashboard zuzugreifen</p>
+          </div>
+        </section>
+        <Footer />
+      </div>
+    );
+  }
+
   const stats = {
     totalProducts: products.length,
-    totalValue: products.reduce((sum, p) => sum + p.price, 0),
-    inStock: products.filter(p => p.inStock).length,
-    categories: [...new Set(products.map(p => p.category))].length
+    totalValue: products.reduce((sum, p) => sum + parseFloat(p.price.toString()), 0),
+    inStock: products.filter(p => p.in_stock).length,
+    categories: [...new Set(products.map(p => p.category).filter(Boolean))].length
   };
 
-  const handleAddProduct = () => {
-    const product = {
-      ...newProduct,
-      id: Math.max(...products.map(p => p.id)) + 1,
-      price: parseFloat(newProduct.price),
-      year: parseInt(newProduct.year),
-      image: newProduct.images[0],
-      images: newProduct.images.filter(img => img.trim() !== ''),
-      inStock: true
-    };
-    
-    setProducts([...products, product]);
-    setNewProduct({
-      title: '',
-      artist: '',
-      price: '',
-      description: '',
-      longDescription: '',
-      year: '',
-      dimensions: '',
-      technique: '',
-      category: '',
-      images: ['']
-    });
-    setShowAddForm(false);
-  };
+  const handleAddProduct = async () => {
+    try {
+      const productData = {
+        title: newProduct.title,
+        artist: newProduct.artist,
+        price: parseFloat(newProduct.price),
+        description: newProduct.description,
+        long_description: newProduct.long_description,
+        year: newProduct.year ? parseInt(newProduct.year) : null,
+        dimensions: newProduct.dimensions || null,
+        technique: newProduct.technique || null,
+        category: newProduct.category || null,
+        in_stock: true
+      };
 
-  const handleDeleteProduct = (id: number) => {
-    if (confirm('Sind Sie sicher, dass Sie dieses Kunstwerk löschen möchten?')) {
-      setProducts(products.filter(p => p.id !== id));
+      const product = await createProduct.mutateAsync(productData);
+      
+      // Add product images if provided
+      if (newProduct.images.length > 0 && newProduct.images[0].trim()) {
+        // You would implement image creation here using a separate hook
+        // For now, we'll just create the product
+      }
+      
+      setNewProduct({
+        title: '',
+        artist: '',
+        price: '',
+        description: '',
+        long_description: '',
+        year: '',
+        dimensions: '',
+        technique: '',
+        category: '',
+        images: ['']
+      });
+      setShowAddForm(false);
+      toast.success('Kunstwerk erfolgreich hinzugefügt');
+    } catch (error) {
+      console.error('Error creating product:', error);
+      toast.error('Fehler beim Hinzufügen des Kunstwerks');
     }
   };
 
-  const toggleStock = (id: number) => {
-    setProducts(products.map(p => 
-      p.id === id ? { ...p, inStock: !p.inStock } : p
-    ));
+  const handleDeleteProduct = async (id: string) => {
+    if (confirm('Sind Sie sicher, dass Sie dieses Kunstwerk löschen möchten?')) {
+      try {
+        await deleteProduct.mutateAsync(id);
+        toast.success('Kunstwerk erfolgreich gelöscht');
+      } catch (error) {
+        console.error('Error deleting product:', error);
+        toast.error('Fehler beim Löschen des Kunstwerks');
+      }
+    }
   };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="container mx-auto px-4 py-20 text-center">
+          <p className="text-gray-600">Lade Dashboard...</p>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -76,7 +131,7 @@ const Dashboard = () => {
       {/* Dashboard Header */}
       <section className="bg-gradient-to-r from-red-800 via-red-700 to-yellow-600 text-white py-16">
         <div className="container mx-auto px-4">
-          <h1 className="text-4xl font-bold mb-4">Künstler Dashboard</h1>
+          <h1 className="text-4xl font-bold mb-4">Admin Dashboard</h1>
           <p className="text-xl text-yellow-200">
             Verwalten Sie Ihre Kunstwerke und überwachen Sie Ihre Verkäufe
           </p>
@@ -254,43 +309,11 @@ const Dashboard = () => {
                 <div className="md:col-span-2">
                   <label className="block text-gray-700 font-bold mb-2">Ausführliche Beschreibung</label>
                   <textarea 
-                    value={newProduct.longDescription}
-                    onChange={(e) => setNewProduct({...newProduct, longDescription: e.target.value})}
+                    value={newProduct.long_description}
+                    onChange={(e) => setNewProduct({...newProduct, long_description: e.target.value})}
                     className="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500 h-32"
                     placeholder="Detaillierte Beschreibung, Geschichte und Kontext"
                   />
-                </div>
-                
-                <div className="md:col-span-2">
-                  <label className="block text-gray-700 font-bold mb-2">Bild-IDs (Unsplash)</label>
-                  <div className="space-y-2">
-                    {newProduct.images.map((image, index) => (
-                      <div key={index} className="flex items-center space-x-2">
-                        <input 
-                          type="text"
-                          value={image}
-                          onChange={(e) => {
-                            const newImages = [...newProduct.images];
-                            newImages[index] = e.target.value;
-                            setNewProduct({...newProduct, images: newImages});
-                          }}
-                          className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-red-500"
-                          placeholder="z.B. photo-1541961017774-22349e4a1262"
-                        />
-                        {index === newProduct.images.length - 1 && (
-                          <button 
-                            onClick={() => setNewProduct({...newProduct, images: [...newProduct.images, '']})}
-                            className="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700"
-                          >
-                            +
-                          </button>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-sm text-gray-600 mt-2">
-                    Verwenden Sie Unsplash Foto-IDs. Das erste Bild wird als Hauptbild verwendet.
-                  </p>
                 </div>
               </div>
               
@@ -303,9 +326,10 @@ const Dashboard = () => {
                 </button>
                 <button 
                   onClick={handleAddProduct}
-                  className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-lg font-bold hover:from-red-700 hover:to-red-800 transition-all duration-200"
+                  disabled={createProduct.isPending}
+                  className="bg-gradient-to-r from-red-600 to-red-700 text-white px-6 py-3 rounded-lg font-bold hover:from-red-700 hover:to-red-800 transition-all duration-200 disabled:opacity-50"
                 >
-                  Kunstwerk hinzufügen
+                  {createProduct.isPending ? 'Wird hinzugefügt...' : 'Kunstwerk hinzufügen'}
                 </button>
               </div>
             </div>
@@ -338,57 +362,64 @@ const Dashboard = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {products.map((product) => (
-                    <tr key={product.id} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <div className="flex items-center">
-                          <img 
-                            src={`https://images.unsplash.com/${product.image}?w=60&h=60&fit=crop`}
-                            alt={product.title}
-                            className="h-12 w-12 rounded-lg object-cover mr-4"
-                          />
-                          <div>
-                            <div className="text-sm font-medium text-gray-900">{product.title}</div>
-                            <div className="text-sm text-gray-500">{product.category}</div>
+                  {products.map((product) => {
+                    const primaryImage = product.product_images?.find(img => img.is_primary) || product.product_images?.[0];
+                    const imageUrl = primaryImage 
+                      ? `https://images.unsplash.com/${primaryImage.image_url}?w=60&h=60&fit=crop`
+                      : `https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=60&h=60&fit=crop`;
+
+                    return (
+                      <tr key={product.id} className="hover:bg-gray-50">
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <div className="flex items-center">
+                            <img 
+                              src={imageUrl}
+                              alt={product.title}
+                              className="h-12 w-12 rounded-lg object-cover mr-4"
+                            />
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">{product.title}</div>
+                              <div className="text-sm text-gray-500">{product.category}</div>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {product.artist}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {product.price}€
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                        {product.year}
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
-                        <button 
-                          onClick={() => toggleStock(product.id)}
-                          className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                            product.inStock 
-                              ? 'bg-green-100 text-green-800' 
-                              : 'bg-red-100 text-red-800'
-                          }`}
-                        >
-                          {product.inStock ? 'Verfügbar' : 'Nicht verfügbar'}
-                        </button>
-                      </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
-                          <button className="text-blue-600 hover:text-blue-900">
-                            <Edit className="h-4 w-4" />
-                          </button>
-                          <button 
-                            onClick={() => handleDeleteProduct(product.id)}
-                            className="text-red-600 hover:text-red-900"
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {product.artist}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {product.price}€
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                          {product.year}
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap">
+                          <span 
+                            className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                              product.in_stock 
+                                ? 'bg-green-100 text-green-800' 
+                                : 'bg-red-100 text-red-800'
+                            }`}
                           >
-                            <Trash2 className="h-4 w-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                            {product.in_stock ? 'Verfügbar' : 'Nicht verfügbar'}
+                          </span>
+                        </td>
+                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                          <div className="flex space-x-2">
+                            <button className="text-blue-600 hover:text-blue-900">
+                              <Edit className="h-4 w-4" />
+                            </button>
+                            <button 
+                              onClick={() => handleDeleteProduct(product.id)}
+                              className="text-red-600 hover:text-red-900"
+                              disabled={deleteProduct.isPending}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
