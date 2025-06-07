@@ -51,13 +51,20 @@ export const useCreateProduct = () => {
   
   return useMutation({
     mutationFn: async (product: Omit<Database['public']['Tables']['products']['Insert'], 'id'>) => {
+      console.log('Creating product with data:', product);
+      
       const { data, error } = await supabase
         .from('products')
         .insert(product)
         .select()
         .single();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error creating product:', error);
+        throw error;
+      }
+      
+      console.log('Product created successfully:', data);
       return data;
     },
     onSuccess: () => {
