@@ -12,6 +12,8 @@ import Cart from "./pages/Cart";
 import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/AuthPage";
 import Impressum from "./pages/Impressum";
+import AboutArtist from "./pages/AboutArtist";
+import Werke from "./pages/Werke";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -31,11 +33,12 @@ const App = () => (
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/impressum" element={<Impressum />} />
+            <Route path="/ueber-uns" element={<AboutArtist />} />
+            <Route path="/werke" element={<Werke />} />
             {/* Placeholder routes for other legal pages */}
             <Route path="/datenschutz" element={<Impressum />} />
             <Route path="/agb" element={<Impressum />} />
             <Route path="/widerruf" element={<Impressum />} />
-            <Route path="/ueber-uns" element={<Home />} />
             <Route path="/kontakt" element={<Home />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
