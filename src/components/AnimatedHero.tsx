@@ -55,9 +55,6 @@ const AnimatedHero = () => {
             if (progress >= 0.8 && !isVerticalScrolling) {
               setIsVerticalScrolling(true);
             }
-          },
-          onComplete: () => {
-            setIsVerticalScrolling(true);
           }
         }
       });
