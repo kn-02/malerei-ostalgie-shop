@@ -89,166 +89,151 @@ const AnimatedHero = () => {
 
   return (
     <>
-      {/* Horizontal Scrolling Hero Section */}
-      <div ref={containerRef} className="relative h-screen overflow-hidden">
-        <div 
-          ref={imageContainerRef}
-          className="flex h-full"
-          style={{ width: `${heroImages.length * 100}vw` }}
-        >
-          {heroImages.map((image, index) => (
-            <div
-              key={index}
-              ref={index === heroImages.length - 1 ? lastImageRef : null}
-              className="relative w-screen h-full flex-shrink-0"
-            >
-              <motion.div
-                className="absolute inset-0 bg-cover bg-center"
-                style={{
-                  backgroundImage: `linear-gradient(rgba(139, 0, 0, 0.4), rgba(184, 134, 11, 0.4)), url('${image}')`
-                }}
-                initial={{ scale: 1.1 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 2, ease: "easeOut" }}
-              />
-              
-              {/* Floating particles effect */}
-              <div className="absolute inset-0 overflow-hidden">
-                {[...Array(20)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-2 h-2 bg-yellow-400 rounded-full opacity-30"
-                    style={{
-                      left: `${Math.random() * 100}%`,
-                      top: `${Math.random() * 100}%`,
-                    }}
-                    animate={{
-                      y: [-20, 20],
-                      opacity: [0.3, 0.7, 0.3],
-                    }}
-                    transition={{
-                      duration: 3 + Math.random() * 2,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                      delay: Math.random() * 2,
-                    }}
-                  />
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Text overlay that scales with scroll */}
-        <motion.div
-          ref={textRef}
-          className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
-          style={{ scale: isVerticalScrolling ? textScale : 1 }}
-        >
-          <div className="text-center text-white max-w-4xl mx-auto px-4 pointer-events-auto">
-            <motion.h1
-              className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.5 }}
-            >
-              DDR Kunstgalerie
-            </motion.h1>
-            
-            <motion.p
-              className="text-xl md:text-2xl mb-8 text-yellow-200"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 0.8 }}
-            >
-              Authentische Gemälde aus der Zeit der Deutschen Demokratischen Republik
-            </motion.p>
-            
-            <motion.p
-              className="text-lg mb-10 text-gray-200 max-w-2xl mx-auto"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1, delay: 1.1 }}
-            >
-              Entdecken Sie eine einzigartige Sammlung von Originalgemälden, die das Leben, 
-              die Kultur und die Hoffnungen einer ganzen Generation widerspiegeln.
-            </motion.p>
-            
-            <motion.div
-              className="flex flex-col sm:flex-row gap-4 justify-center items-center"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 1, delay: 1.4 }}
-            >
-              <Link 
-                to="/galerie"
-                className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-yellow-400 text-red-800 px-8 py-4 rounded-lg text-lg font-bold hover:from-yellow-400 hover:to-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                <span>Galerie entdecken</span>
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-              
-              <Link 
-                to="/ueber-uns"
-                className="inline-flex items-center space-x-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-lg text-lg font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
-              >
-                <span>Künstlerin entdecken</span>
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Progress indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-          <div className="flex space-x-2">
-            {heroImages.map((_, index) => (
-              <motion.div
+      {/* Add margin top to account for fixed header */}
+      <div className="mt-16">
+        {/* Horizontal Scrolling Hero Section */}
+        <div ref={containerRef} className="relative h-screen overflow-hidden">
+          <div 
+            ref={imageContainerRef}
+            className="flex h-full"
+            style={{ width: `${heroImages.length * 100}vw` }}
+          >
+            {heroImages.map((image, index) => (
+              <div
                 key={index}
-                className={`w-3 h-3 rounded-full ${
-                  index === currentImageIndex ? 'bg-yellow-400' : 'bg-white opacity-50'
-                }`}
-                animate={{
-                  scale: index === currentImageIndex ? 1.2 : 1,
-                }}
-                transition={{ duration: 0.3 }}
-              />
+                ref={index === heroImages.length - 1 ? lastImageRef : null}
+                className="relative w-screen h-full flex-shrink-0"
+              >
+                <motion.div
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{
+                    backgroundImage: `linear-gradient(rgba(139, 0, 0, 0.4), rgba(184, 134, 11, 0.4)), url('${image}')`
+                  }}
+                  initial={{ scale: 1.1 }}
+                  animate={{ scale: 1 }}
+                  transition={{ duration: 2, ease: "easeOut" }}
+                />
+                
+                {/* Floating particles effect */}
+                <div className="absolute inset-0 overflow-hidden">
+                  {[...Array(20)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-2 h-2 bg-yellow-400 rounded-full opacity-30"
+                      style={{
+                        left: `${Math.random() * 100}%`,
+                        top: `${Math.random() * 100}%`,
+                      }}
+                      animate={{
+                        y: [-20, 20],
+                        opacity: [0.3, 0.7, 0.3],
+                      }}
+                      transition={{
+                        duration: 3 + Math.random() * 2,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                        delay: Math.random() * 2,
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
+
+          {/* Text overlay that scales with scroll */}
+          <motion.div
+            ref={textRef}
+            className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none"
+            style={{ scale: isVerticalScrolling ? textScale : 1 }}
+          >
+            <div className="text-center text-white max-w-4xl mx-auto px-4 pointer-events-auto">
+              <motion.h1
+                className="text-5xl md:text-7xl font-bold mb-6 leading-tight"
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.5 }}
+              >
+                DDR Kunstgalerie
+              </motion.h1>
+              
+              <motion.p
+                className="text-xl md:text-2xl mb-8 text-yellow-200"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 0.8 }}
+              >
+                Authentische Gemälde aus der Zeit der Deutschen Demokratischen Republik
+              </motion.p>
+              
+              <motion.p
+                className="text-lg mb-10 text-gray-200 max-w-2xl mx-auto"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 1, delay: 1.1 }}
+              >
+                Entdecken Sie eine einzigartige Sammlung von Originalgemälden, die das Leben, 
+                die Kultur und die Hoffnungen einer ganzen Generation widerspiegeln.
+              </motion.p>
+              
+              <motion.div
+                className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 1, delay: 1.4 }}
+              >
+                <Link 
+                  to="/galerie"
+                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-yellow-500 to-yellow-400 text-red-800 px-8 py-4 rounded-lg text-lg font-bold hover:from-yellow-400 hover:to-yellow-300 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <span>Galerie entdecken</span>
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+                
+                <Link 
+                  to="/ueber-uns"
+                  className="inline-flex items-center space-x-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-lg text-lg font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105 shadow-lg"
+                >
+                  <span>Künstlerin entdecken</span>
+                  <ArrowRight className="h-5 w-5" />
+                </Link>
+              </motion.div>
+            </div>
+          </motion.div>
+
+          {/* Scroll indicator */}
+          <motion.div
+            className="absolute bottom-8 right-8 z-20"
+            animate={{
+              y: [0, 10, 0],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          >
+            <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
+              <motion.div
+                className="w-1 h-3 bg-white rounded-full mt-2"
+                animate={{
+                  opacity: [1, 0.3, 1],
+                }}
+                transition={{
+                  duration: 1.5,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              />
+            </div>
+          </motion.div>
         </div>
 
-        {/* Scroll indicator */}
-        <motion.div
-          className="absolute bottom-8 right-8 z-20"
-          animate={{
-            y: [0, 10, 0],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-        >
-          <div className="w-6 h-10 border-2 border-white rounded-full flex justify-center">
-            <motion.div
-              className="w-1 h-3 bg-white rounded-full mt-2"
-              animate={{
-                opacity: [1, 0.3, 1],
-              }}
-              transition={{
-                duration: 1.5,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-            />
-          </div>
-        </motion.div>
+        {/* Spacer for zoom effect */}
+        {isVerticalScrolling && (
+          <div className="h-screen bg-gradient-to-b from-red-900 to-yellow-900" />
+        )}
       </div>
-
-      {/* Spacer for zoom effect */}
-      {isVerticalScrolling && (
-        <div className="h-screen bg-gradient-to-b from-red-900 to-yellow-900" />
-      )}
     </>
   );
 };
