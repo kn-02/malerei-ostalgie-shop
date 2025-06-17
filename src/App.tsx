@@ -13,6 +13,7 @@ import Dashboard from "./pages/Dashboard";
 import AuthPage from "./pages/AuthPage";
 import Impressum from "./pages/Impressum";
 import AboutArtist from "./pages/AboutArtist";
+import StoryTimeline from "./pages/StoryTimeline";
 import Werke from "./pages/Werke";
 import NotFound from "./pages/NotFound";
 
@@ -34,6 +35,7 @@ const App = () => (
             <Route path="/auth" element={<AuthPage />} />
             <Route path="/impressum" element={<Impressum />} />
             <Route path="/ueber-uns" element={<AboutArtist />} />
+            <Route path="/story-timeline" element={<StoryTimeline />} />
             <Route path="/werke" element={<Werke />} />
             {/* Placeholder routes for other legal pages */}
             <Route path="/datenschutz" element={<Impressum />} />

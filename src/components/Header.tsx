@@ -28,6 +28,9 @@ const Header = () => {
             <Link to="/galerie" className="hover:text-yellow-300 transition-colors">
               Galerie
             </Link>
+            <Link to="/story-timeline" className="hover:text-yellow-300 transition-colors">
+              Zeitzeugin
+            </Link>
             <Link to="/ueber-uns" className="hover:text-yellow-300 transition-colors">
               Über uns
             </Link>
@@ -73,6 +76,13 @@ const Header = () => {
                 onClick={() => setIsOpen(false)}
               >
                 Galerie
+              </Link>
+              <Link 
+                to="/story-timeline" 
+                className="hover:text-yellow-300 transition-colors"
+                onClick={() => setIsOpen(false)}
+              >
+                Zeitzeugin
               </Link>
               <Link 
                 to="/ueber-uns" 
