@@ -228,11 +228,6 @@ const AnimatedHero = () => {
             </div>
           </motion.div>
         </div>
-
-        {/* Spacer for zoom effect */}
-        {isVerticalScrolling && (
-          <div className="h-screen bg-gradient-to-b from-red-900 to-yellow-900" />
-        )}
       </div>
     </>
   );
