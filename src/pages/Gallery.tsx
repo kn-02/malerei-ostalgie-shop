@@ -54,7 +54,7 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({
       toast.error('Bitte melden Sie sich an, um Artikel zu markieren');
       return;
     }
-    toggleLike.mutate(artwork.id);
+    toggleLike.mutate(artwork.id.toString());
   };
 
   const handleViewDetails = () => {
