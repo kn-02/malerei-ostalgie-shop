@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { X, ShoppingCart, Heart, Eye, ArrowLeft, ArrowRight, Filter } from 'lucide-react';
-import { Dialog, DialogContent } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { useProducts } from '@/hooks/useProducts';
 import { useAddToCart } from '@/hooks/useCart';
@@ -80,6 +80,10 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="max-w-6xl max-h-[95vh] overflow-y-auto bg-gradient-to-br from-stone-50 to-amber-50 border-2 border-red-800">
+        <DialogTitle className="sr-only">
+          {artwork.title} - Kunstwerk Details
+        </DialogTitle>
+        
         <div className="absolute inset-0 bg-vintage-grain opacity-5 pointer-events-none" />
         
         {/* Navigation Arrows */}
@@ -365,7 +369,9 @@ const Gallery = () => {
             >
               <AnimatePresence>
                 {filteredProducts.map((product, index) => {
-                  const primaryImage = product.product_images?.[0]?.image_url || '/placeholder.svg';
+                  const primaryImage = product.product_images?.[0]?.image_url 
+                    ? `https://images.unsplash.com/${product.product_images[0].image_url}?auto=format&fit=crop&w=800&q=80`
+                    : '/placeholder.svg';
                   
                   return (
                     <motion.div
