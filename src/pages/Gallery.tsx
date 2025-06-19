@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '../components/Header';
@@ -36,7 +35,7 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({
   const navigate = useNavigate();
   const addToCart = useAddToCart();
   const toggleLike = useToggleLike();
-  const { data: likesData } = useProductLikes(artwork?.id || '');
+  const { data: likesData } = useProductLikes(artwork?.id?.toString() || '');
 
   const handleAddToCart = () => {
     if (!user) {
