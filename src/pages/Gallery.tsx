@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Header from '../components/Header';
@@ -418,7 +419,7 @@ const Gallery = () => {
                           <motion.img 
                             src={primaryImage}
                             alt={product.title}
-                            className="w-full h-full object-cover filter sepia-[10%] saturate-[110%] contrast-[105%] brightness-[98%] group-hover:sepia-0 group-hover:saturate-100 group-hover:contrast-100 group-hover:brightness-100 transition-all duration-700"
+                            className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700"
                             whileHover={{ scale: 1.1 }}
                             transition={{ duration: 0.6 }}
                           />
@@ -432,7 +433,7 @@ const Gallery = () => {
                               <h3 className="text-lg font-bold font-serif mb-1">{product.title}</h3>
                               <div className="flex justify-between items-center">
                                 <span className="text-sm font-mono">{product.year || 'Jahr unbekannt'}</span>
-                                <span className="text-lg font-bold">€{parseFloat(product.price).toFixed(2)}</span>
+                                <span className="text-lg font-bold">€{parseFloat(product.price.toString()).toFixed(2)}</span>
                               </div>
                             </div>
                           </div>
