@@ -37,7 +37,7 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({ images, title }) => {
   };
 
   return (
-    <div className="relative bg-gradient-to-br from-red-50 to-yellow-50 rounded-lg overflow-hidden shadow-xl">
+    <div className="relative bg-gradient-to-br from-red-50 to-yellow-50 rounded-lg overflow-hidden shadow-xl border-2 border-red-200">
       {/* Main image display */}
       <div className="relative h-96 md:h-[500px] overflow-hidden">
         <div 
@@ -47,20 +47,12 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({ images, title }) => {
           {images.map((image, index) => (
             <div key={index} className="w-full flex-shrink-0 relative">
               <img 
-                src={`https://images.unsplash.com/${image}?w=800&h=600&fit=crop`}
+                src={`https://images.unsplash.com/${image}?auto=format&fit=crop&w=800&q=80`}
                 alt={`${title} - Ansicht ${index + 1}`}
-                className="w-full h-full object-cover"
-                style={{
-                  filter: 'sepia(15%) saturate(120%) contrast(110%) brightness(95%)'
-                }}
+                className="w-full h-full object-cover filter sepia-[15%] saturate-[120%] contrast-[110%] brightness-[95%]"
               />
-              {/* DDR-style film grain overlay */}
-              <div 
-                className="absolute inset-0 opacity-20 mix-blend-multiply"
-                style={{
-                  backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4'/%3E%3CfeColorMatrix in='turbulence' type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E")`
-                }}
-              ></div>
+              {/* Vintage grain overlay */}
+              <div className="absolute inset-0 bg-vintage-grain opacity-20 pointer-events-none" />
             </div>
           ))}
         </div>
@@ -80,7 +72,7 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({ images, title }) => {
         </button>
 
         {/* Image counter */}
-        <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-bold">
+        <div className="absolute top-4 right-4 bg-black/70 text-white px-3 py-1 rounded-full text-sm font-bold font-mono">
           {currentImage + 1} / {images.length}
         </div>
       </div>
@@ -99,12 +91,9 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({ images, title }) => {
               }`}
             >
               <img 
-                src={`https://images.unsplash.com/${image}?w=100&h=100&fit=crop`}
+                src={`https://images.unsplash.com/${image}?auto=format&fit=crop&w=100&q=80`}
                 alt={`Thumbnail ${index + 1}`}
-                className="w-full h-full object-cover"
-                style={{
-                  filter: 'sepia(10%) saturate(110%)'
-                }}
+                className="w-full h-full object-cover filter sepia-[10%] saturate-[110%]"
               />
             </button>
           ))}
@@ -115,7 +104,7 @@ const ImageSlideshow: React.FC<ImageSlideshowProps> = ({ images, title }) => {
       <div className="absolute bottom-4 left-4">
         <button
           onClick={() => setIsAutoPlaying(!isAutoPlaying)}
-          className={`px-3 py-1 rounded-full text-xs font-bold transition-colors duration-200 ${
+          className={`px-3 py-1 rounded-full text-xs font-bold font-mono transition-colors duration-200 ${
             isAutoPlaying 
               ? 'bg-green-600 text-white' 
               : 'bg-gray-600 text-white'

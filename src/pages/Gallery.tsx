@@ -75,7 +75,16 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({
 
   if (!artwork) return null;
 
-  const primaryImage = artwork.product_images?.[0]?.image_url || '/placeholder.svg';
+  // Handle image display with fallback for products without images
+  const getImageUrl = (product: any) => {
+    if (product.product_images?.length > 0) {
+      return `https://images.unsplash.com/${product.product_images[0].image_url}?auto=format&fit=crop&w=800&q=80`;
+    }
+    // Use a placeholder image for products without images (like testkunst)
+    return 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&w=800&q=80';
+  };
+
+  const primaryImage = getImageUrl(artwork);
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -116,9 +125,11 @@ const ArtworkModal: React.FC<ArtworkModalProps> = ({
               <img 
                 src={primaryImage}
                 alt={artwork.title}
-                className="w-full h-full object-cover"
+                className="w-full h-full object-cover filter sepia-[15%] saturate-[120%] contrast-[110%] brightness-[95%]"
               />
             </div>
+            {/* Vintage grain overlay */}
+            <div className="absolute inset-0 bg-vintage-grain opacity-20 rounded-lg pointer-events-none" />
             {/* Typewriter overlay effect */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent rounded-lg pointer-events-none" />
           </div>
@@ -222,6 +233,23 @@ const Gallery = () => {
     const matchesTheme = selectedTheme === 'alle' || product.category === selectedTheme;
     return matchesTheme && product.in_stock;
   });
+
+  // Helper function to get image URL with fallback
+  const getImageUrl = (product: any) => {
+    if (product.product_images?.length > 0) {
+      return `https://images.unsplash.com/${product.product_images[0].image_url}?auto=format&fit=crop&w=800&q=80`;
+    }
+    // Use different placeholder images based on product title or category
+    const placeholders = [
+      'photo-1541961017774-22349e4a1262',
+      'photo-1470813740244-df37b8c1edcb',
+      'photo-1469474968028-56623f02e42e',
+      'photo-1523712999610-f77fbcfc3843',
+      'photo-1500673922987-e212871fec22'
+    ];
+    const index = product.title.length % placeholders.length;
+    return `https://images.unsplash.com/${placeholders[index]}?auto=format&fit=crop&w=800&q=80`;
+  };
 
   const openModal = (artwork: any) => {
     setSelectedArtwork(artwork);
@@ -369,9 +397,7 @@ const Gallery = () => {
             >
               <AnimatePresence>
                 {filteredProducts.map((product, index) => {
-                  const primaryImage = product.product_images?.[0]?.image_url 
-                    ? `https://images.unsplash.com/${product.product_images[0].image_url}?auto=format&fit=crop&w=800&q=80`
-                    : '/placeholder.svg';
+                  const primaryImage = getImageUrl(product);
                   
                   return (
                     <motion.div
@@ -392,10 +418,13 @@ const Gallery = () => {
                           <motion.img 
                             src={primaryImage}
                             alt={product.title}
-                            className="w-full h-full object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700"
+                            className="w-full h-full object-cover filter sepia-[10%] saturate-[110%] contrast-[105%] brightness-[98%] group-hover:sepia-0 group-hover:saturate-100 group-hover:contrast-100 group-hover:brightness-100 transition-all duration-700"
                             whileHover={{ scale: 1.1 }}
                             transition={{ duration: 0.6 }}
                           />
+                          
+                          {/* Vintage grain overlay */}
+                          <div className="absolute inset-0 bg-vintage-grain opacity-20 group-hover:opacity-10 transition-opacity duration-500" />
                           
                           {/* Hover overlay */}
                           <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-20">
