@@ -12,49 +12,50 @@ const Home = () => {
   const featuredProducts = products.slice(0, 3);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-stone-100 to-amber-100">
       <Header />
       
       {/* Animated Hero Section */}
       <AnimatedHero />
 
       {/* Features Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="py-20 bg-gradient-to-br from-stone-50 to-amber-50">
+        <div className="absolute inset-0 bg-vintage-grain opacity-5" />
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Warum DDR Kunstgalerie?</h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4 font-serif">Warum DDR Kunstgalerie?</h2>
+            <p className="text-xl text-gray-600 max-w-2xl mx-auto font-mono">
               Wir bieten authentische Kunstwerke mit garantierter Herkunft und professionellem Service.
             </p>
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-8 bg-gradient-to-br from-red-50 to-yellow-50 rounded-lg hover:shadow-lg transition-shadow duration-300">
+            <div className="text-center p-8 bg-gradient-to-br from-red-50 to-yellow-50 rounded-lg hover:shadow-lg transition-shadow duration-300 border-2 border-red-200/30">
               <div className="bg-red-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Palette className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Authentizität</h3>
-              <p className="text-gray-600">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4 font-serif">Authentizität</h3>
+              <p className="text-gray-600 font-mono">
                 Jedes Gemälde stammt aus der originalen DDR-Zeit und wird mit Echtheitszertifikat geliefert.
               </p>
             </div>
             
-            <div className="text-center p-8 bg-gradient-to-br from-yellow-50 to-red-50 rounded-lg hover:shadow-lg transition-shadow duration-300">
+            <div className="text-center p-8 bg-gradient-to-br from-yellow-50 to-red-50 rounded-lg hover:shadow-lg transition-shadow duration-300 border-2 border-red-200/30">
               <div className="bg-yellow-600 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Award className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Qualität</h3>
-              <p className="text-gray-600">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4 font-serif">Qualität</h3>
+              <p className="text-gray-600 font-mono">
                 Sorgfältig restaurierte und konservierte Kunstwerke in bestem Zustand.
               </p>
             </div>
             
-            <div className="text-center p-8 bg-gradient-to-br from-red-50 to-yellow-50 rounded-lg hover:shadow-lg transition-shadow duration-300">
+            <div className="text-center p-8 bg-gradient-to-br from-red-50 to-yellow-50 rounded-lg hover:shadow-lg transition-shadow duration-300 border-2 border-red-200/30">
               <div className="bg-red-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Shield className="h-8 w-8 text-white" />
               </div>
-              <h3 className="text-2xl font-bold text-gray-800 mb-4">Sicherheit</h3>
-              <p className="text-gray-600">
+              <h3 className="text-2xl font-bold text-gray-800 mb-4 font-serif">Sicherheit</h3>
+              <p className="text-gray-600 font-mono">
                 14 Tage Rückgaberecht und sichere Zahlung für Ihren sorgenfreien Kauf.
               </p>
             </div>
@@ -64,10 +65,11 @@ const Home = () => {
 
       {/* Featured Products */}
       <section className="py-20 bg-gradient-to-br from-red-50 to-yellow-50">
-        <div className="container mx-auto px-4">
+        <div className="absolute inset-0 bg-vintage-grain opacity-5" />
+        <div className="container mx-auto px-4 relative z-10">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-gray-800 mb-4">Ausgewählte Werke</h2>
-            <p className="text-xl text-gray-600">
+            <h2 className="text-4xl font-bold text-gray-800 mb-4 font-serif">Ausgewählte Werke</h2>
+            <p className="text-xl text-gray-600 font-mono">
               Entdecken Sie unsere beliebtesten DDR-Gemälde
             </p>
           </div>
@@ -83,6 +85,7 @@ const Home = () => {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.4, delay: index * 0.1 }}
                   className="group cursor-pointer"
+                  onClick={() => window.location.href = `/produkt/${product.id}`}
                 >
                   <div className="relative overflow-hidden rounded-lg bg-white shadow-lg hover:shadow-2xl transition-all duration-500 border-2 border-transparent hover:border-red-300">
                     {/* Paper texture overlay */}
@@ -128,13 +131,20 @@ const Home = () => {
                         <Link 
                           to={`/produkt/${product.id}`}
                           className="bg-white/90 text-red-800 p-3 rounded-full hover:bg-white transition-colors duration-200"
+                          onClick={(e) => e.stopPropagation()}
                         >
                           <Eye className="h-5 w-5" />
                         </Link>
-                        <button className="bg-white/90 text-red-800 p-3 rounded-full hover:bg-white transition-colors duration-200">
+                        <button 
+                          className="bg-white/90 text-red-800 p-3 rounded-full hover:bg-white transition-colors duration-200"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <Heart className="h-5 w-5" />
                         </button>
-                        <button className="bg-yellow-500 text-red-800 p-3 rounded-full hover:bg-yellow-400 transition-colors duration-200">
+                        <button 
+                          className="bg-yellow-500 text-red-800 p-3 rounded-full hover:bg-yellow-400 transition-colors duration-200"
+                          onClick={(e) => e.stopPropagation()}
+                        >
                           <ShoppingCart className="h-5 w-5" />
                         </button>
                       </div>
@@ -144,12 +154,13 @@ const Home = () => {
                     <div className="p-4">
                       <h3 className="text-xl font-bold text-gray-800 mb-1 font-serif">{product.title}</h3>
                       <p className="text-red-600 font-medium mb-2 font-mono">von {product.artist}</p>
-                      <p className="text-gray-600 text-sm mb-3 line-clamp-2">{product.description}</p>
+                      <p className="text-gray-600 text-sm mb-3 line-clamp-2 font-mono">{product.description}</p>
                       <div className="flex items-center justify-between">
                         <span className="text-2xl font-bold text-red-700">€{product.price.toFixed(2)}</span>
                         <Link
                           to={`/produkt/${product.id}`}
                           className="bg-gradient-to-r from-red-600 to-red-700 text-white px-4 py-2 rounded-lg font-bold font-mono transition-all duration-200 transform hover:scale-105 hover:from-red-700 hover:to-red-800"
+                          onClick={(e) => e.stopPropagation()}
                         >
                           Details ansehen
                         </Link>
@@ -164,7 +175,7 @@ const Home = () => {
           <div className="text-center">
             <Link 
               to="/galerie"
-              className="inline-flex items-center space-x-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-lg text-lg font-bold hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105"
+              className="inline-flex items-center space-x-2 bg-gradient-to-r from-red-600 to-red-700 text-white px-8 py-4 rounded-lg text-lg font-bold font-mono hover:from-red-700 hover:to-red-800 transition-all duration-300 transform hover:scale-105"
             >
               <span>Alle Kunstwerke ansehen</span>
               <ArrowRight className="h-5 w-5" />

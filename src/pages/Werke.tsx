@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { gsap } from 'gsap';
@@ -107,7 +106,7 @@ const Werke = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-stone-100 to-amber-100">
       <Header />
       
       {/* Hero Section */}
@@ -123,7 +122,7 @@ const Werke = () => {
             Werke
           </motion.h1>
           <motion.p
-            className="text-xl text-gray-200"
+            className="text-xl text-gray-200 font-mono"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.2 }}
@@ -134,20 +133,20 @@ const Werke = () => {
       </section>
 
       {/* Filters and View Toggle */}
-      <section className="py-8 bg-white border-b border-gray-200">
+      <section className="py-8 bg-stone-200 border-b border-red-300">
         <div className="container mx-auto px-4">
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-4 lg:space-y-0">
             {/* Filters */}
             <div className="flex flex-wrap gap-4 items-center">
               <div className="flex items-center space-x-2">
-                <Filter className="h-5 w-5 text-gray-600" />
-                <span className="font-mono text-sm text-gray-600">Filter:</span>
+                <Filter className="h-5 w-5 text-red-800" />
+                <span className="font-mono text-sm text-red-800 font-semibold">Filter:</span>
               </div>
               
               <select 
                 value={selectedTheme} 
                 onChange={(e) => setSelectedTheme(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="px-3 py-2 border border-red-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent font-mono"
               >
                 {themes.map(theme => (
                   <option key={theme} value={theme}>
@@ -159,7 +158,7 @@ const Werke = () => {
               <select 
                 value={selectedYear} 
                 onChange={(e) => setSelectedYear(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="px-3 py-2 border border-red-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent font-mono"
               >
                 {years.map(year => (
                   <option key={year} value={year}>
@@ -171,7 +170,7 @@ const Werke = () => {
               <select 
                 value={selectedTechnique} 
                 onChange={(e) => setSelectedTechnique(e.target.value)}
-                className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                className="px-3 py-2 border border-red-300 rounded-md text-sm focus:ring-2 focus:ring-red-500 focus:border-transparent font-mono"
               >
                 {techniques.map(technique => (
                   <option key={technique} value={technique}>
@@ -185,7 +184,7 @@ const Werke = () => {
             <div className="flex items-center space-x-2">
               <button
                 onClick={() => setViewMode('grid')}
-                className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                className={`px-4 py-2 rounded-md text-sm font-mono transition-colors ${
                   viewMode === 'grid' 
                     ? 'bg-red-700 text-white' 
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -196,7 +195,7 @@ const Werke = () => {
               </button>
               <button
                 onClick={() => setViewMode('timeline')}
-                className={`px-4 py-2 rounded-md text-sm transition-colors ${
+                className={`px-4 py-2 rounded-md text-sm font-mono transition-colors ${
                   viewMode === 'timeline' 
                     ? 'bg-red-700 text-white' 
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
@@ -232,13 +231,20 @@ const Werke = () => {
                     transition={{ duration: 0.6, delay: index * 0.1 }}
                     onClick={() => openModal(artwork)}
                   >
-                    <div className="relative overflow-hidden rounded-lg bg-white shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div className="relative overflow-hidden rounded-lg bg-white shadow-lg hover:shadow-xl transition-all duration-500 border-2 border-transparent hover:border-red-300">
+                      {/* Paper texture overlay */}
+                      <div className="absolute inset-0 bg-vintage-grain opacity-10 pointer-events-none z-10" />
+                      
                       <div className="aspect-w-4 aspect-h-3 relative">
                         <img 
                           src={artwork.image} 
                           alt={artwork.title}
-                          className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-500"
+                          className="w-full h-64 object-cover filter grayscale group-hover:grayscale-0 transition-all duration-700 group-hover:scale-110"
                         />
+                        
+                        {/* Vintage grain overlay */}
+                        <div className="absolute inset-0 bg-vintage-grain opacity-20 group-hover:opacity-10 transition-opacity duration-500" />
+                        
                         <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition-all duration-300 flex items-center justify-center">
                           <motion.div
                             className="opacity-0 group-hover:opacity-100 transition-opacity duration-300"
@@ -247,6 +253,11 @@ const Werke = () => {
                           >
                             <Eye className="h-8 w-8 text-white" />
                           </motion.div>
+                        </div>
+                        
+                        {/* Year Badge */}
+                        <div className="absolute top-3 right-3 bg-red-700 text-yellow-300 px-2 py-1 rounded-full text-xs font-bold font-mono">
+                          {artwork.year}
                         </div>
                       </div>
                       
@@ -261,10 +272,10 @@ const Werke = () => {
                           </div>
                           <div className="flex items-center space-x-2">
                             <Palette className="h-4 w-4" />
-                            <span>{artwork.technique}</span>
+                            <span className="font-mono">{artwork.technique}</span>
                           </div>
                         </div>
-                        <div className="mt-3 px-3 py-1 bg-red-100 text-red-800 text-xs rounded-full inline-block">
+                        <div className="mt-3 px-3 py-1 bg-red-100 text-red-800 text-xs rounded-full inline-block font-mono">
                           {artwork.theme}
                         </div>
                       </div>
@@ -311,14 +322,14 @@ const Werke = () => {
                         <h3 className="text-3xl font-bold text-gray-800 font-serif">
                           {artwork.title}
                         </h3>
-                        <p className="text-gray-600 leading-relaxed">
+                        <p className="text-gray-600 leading-relaxed font-mono">
                           {artwork.description}
                         </p>
                         <div className="flex items-center space-x-4 text-sm text-gray-500">
-                          <span className="bg-gray-100 px-3 py-1 rounded-full">
+                          <span className="bg-gray-100 px-3 py-1 rounded-full font-mono">
                             {artwork.technique}
                           </span>
-                          <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full">
+                          <span className="bg-red-100 text-red-800 px-3 py-1 rounded-full font-mono">
                             {artwork.theme}
                           </span>
                         </div>
@@ -333,18 +344,20 @@ const Werke = () => {
 
       {/* Modal for Artwork Details */}
       <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto bg-gradient-to-br from-stone-50 to-amber-50 border-2 border-red-800">
           {selectedArtwork && (
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
               <div className="relative">
                 <img 
                   src={selectedArtwork.image} 
                   alt={selectedArtwork.title}
-                  className="w-full h-auto rounded-lg"
+                  className="w-full h-auto rounded-lg filter sepia-[15%] saturate-[120%] contrast-[110%] brightness-[95%]"
                 />
+                {/* Vintage grain overlay */}
+                <div className="absolute inset-0 bg-vintage-grain opacity-20 rounded-lg pointer-events-none" />
               </div>
               
-              <div className="space-y-6">
+              <div className="space-y-6 font-mono">
                 <div>
                   <h2 className="text-3xl font-bold text-gray-800 mb-2 font-serif">
                     {selectedArtwork.title}
@@ -356,32 +369,32 @@ const Werke = () => {
                     </span>
                     <span className="flex items-center space-x-1">
                       <Palette className="h-4 w-4" />
-                      <span>{selectedArtwork.technique}</span>
+                      <span className="font-mono">{selectedArtwork.technique}</span>
                     </span>
                   </div>
-                  <span className="inline-block px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full">
+                  <span className="inline-block px-3 py-1 bg-red-100 text-red-800 text-sm rounded-full font-mono">
                     {selectedArtwork.theme}
                   </span>
                 </div>
                 
                 <div className="prose prose-gray">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Beschreibung</h3>
-                  <p className="text-gray-700 leading-relaxed">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2 font-mono">Beschreibung</h3>
+                  <p className="text-gray-700 leading-relaxed font-mono">
                     {selectedArtwork.description}
                   </p>
                 </div>
                 
                 <div className="prose prose-gray">
-                  <h3 className="text-lg font-semibold text-gray-800 mb-2">Hintergrund</h3>
-                  <p className="text-gray-700 leading-relaxed">
+                  <h3 className="text-lg font-semibold text-gray-800 mb-2 font-mono">Hintergrund</h3>
+                  <p className="text-gray-700 leading-relaxed font-mono">
                     {selectedArtwork.background}
                   </p>
                 </div>
                 
                 {selectedArtwork.artistQuote && (
                   <div className="bg-gray-50 p-4 rounded-lg border-l-4 border-red-700">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-2">Künstlerin über das Werk</h3>
-                    <p className="text-gray-700 italic">"{selectedArtwork.artistQuote}"</p>
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2 font-mono">Künstlerin über das Werk</h3>
+                    <p className="text-gray-700 italic font-serif">"{selectedArtwork.artistQuote}"</p>
                   </div>
                 )}
               </div>
