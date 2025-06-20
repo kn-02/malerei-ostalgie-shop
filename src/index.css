@@ -1,7 +1,7 @@
 
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Courier+New:wght@400;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -10,15 +10,19 @@
   * {
     @apply border-border;
   }
+  
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
     font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    line-height: 1.6;
   }
   
-  /* Apply consistent fonts across all pages */
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    line-height: 1.2;
   }
   
   .font-serif {
@@ -26,7 +30,7 @@
   }
   
   .font-mono {
-    font-family: 'Courier New', monospace;
+    font-family: 'JetBrains Mono', monospace;
   }
   
   .font-sans {
@@ -35,52 +39,98 @@
 }
 
 @layer utilities {
-  /* Vintage grain texture */
-  .bg-vintage-grain {
-    background-image: 
-      radial-gradient(circle at 1px 1px, rgba(0,0,0,.15) 1px, transparent 0);
-    background-size: 3px 3px;
+  /* Gradient text effect */
+  .gradient-text {
+    @apply bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent;
   }
   
-  /* Archive paper texture */
-  .bg-paper-texture {
-    background-image: 
-      linear-gradient(45deg, transparent 35%, rgba(255,255,255,.1) 35%, rgba(255,255,255,.1) 65%, transparent 65%),
-      linear-gradient(-45deg, transparent 35%, rgba(0,0,0,.05) 35%, rgba(0,0,0,.05) 65%, transparent 65%);
-    background-size: 20px 20px, 20px 20px;
-    background-position: 0 0, 10px 10px;
+  /* Luxury button */
+  .luxury-button {
+    @apply bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-2xl;
   }
   
-  /* Typewriter effect */
-  .typewriter-effect {
-    font-family: 'Courier New', monospace;
-    background: rgba(255,255,255,0.9);
-    padding: 0.5rem;
-    border: 1px solid rgba(0,0,0,0.1);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  /* Glass effect */
+  .glass-effect {
+    @apply bg-white/10 backdrop-blur-md border border-white/20;
+  }
+  
+  /* Glow effect */
+  .glow-amber {
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  }
+  
+  /* Professional card */
+  .professional-card {
+    @apply bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 hover:border-amber-400/50 hover:shadow-2xl hover:-translate-y-2;
+  }
+  
+  /* Elegant text shadow */
+  .elegant-text-shadow {
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Premium gradient background */
+  .premium-bg {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+  }
+  
+  /* Line clamp utilities */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 }
 
-/* Custom scrollbar for modal */
-.modal-content::-webkit-scrollbar {
+/* Custom scrollbar */
+::-webkit-scrollbar {
   width: 8px;
 }
 
-.modal-content::-webkit-scrollbar-track {
-  background: #f1f1f1;
+::-webkit-scrollbar-track {
+  background: #1e293b;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #f59e0b, #eab308);
   border-radius: 4px;
 }
 
-.modal-content::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(135deg, #d97706, #ca8a04);
 }
 
-.modal-content::-webkit-scrollbar-thumb:hover {
-  background: #555;
+/* Selection color */
+::selection {
+  background: rgba(245, 158, 11, 0.3);
+  color: white;
 }
 
-/* Animation keyframes */
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Professional animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes fadeInScale {
   from {
     opacity: 0;
@@ -92,6 +142,104 @@
   }
 }
 
+@keyframes luxuryGlow {
+  0%, 100% { 
+    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 40px rgba(245, 158, 11, 0.6);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.animate-fade-in-scale {
+  animation: fadeInScale 0.4s ease-out;
+}
+
+.animate-luxury-glow {
+  animation: luxuryGlow 3s ease-in-out infinite;
+}
+
+/* Premium focus styles */
+button:focus,
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+}
+
+/* Professional typography scale */
+.text-display {
+  font-size: clamp(3.5rem, 8vw, 8rem);
+  font-weight: 900;
+  line-height: 0.9;
+}
+
+.text-headline {
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  font-weight: 800;
+  line-height: 1.1;
+}
+
+.text-title {
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* Modal and dialog styles */
+.modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 3px;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, #f59e0b, #eab308);
+  border-radius: 3px;
+}
+
 .modal-enter {
   animation: fadeInScale 0.3s ease-out;
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  .professional-card {
+    @apply hover:translate-y-0 hover:scale-105;
+  }
+}
+
+/* Dark theme optimizations */
+@media (prefers-color-scheme: dark) {
+  body {
+    color-scheme: dark;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .professional-card {
+    @apply border-2 border-white/30;
+  }
+  
+  .luxury-button {
+    @apply border-2 border-amber-400;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
