@@ -58,10 +58,10 @@ const ProductDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-blue-50">
         <Header />
         <div className="container mx-auto px-4 py-20 text-center">
-          <Loader className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <Loader className="h-8 w-8 animate-spin mx-auto mb-4 text-blue-500" />
           <p className="text-gray-600">Lade Kunstwerk...</p>
         </div>
         <Footer />
@@ -71,11 +71,11 @@ const ProductDetail = () => {
 
   if (error || !product) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-blue-50">
         <Header />
         <div className="container mx-auto px-4 py-20 text-center">
           <h1 className="text-2xl text-gray-600">Kunstwerk nicht gefunden</h1>
-          <Link to="/galerie" className="text-red-600 hover:text-red-800 mt-4 inline-block">
+          <Link to="/galerie" className="text-blue-600 hover:text-blue-800 mt-4 inline-block">
             Zurück zur Galerie
           </Link>
         </div>
@@ -89,16 +89,16 @@ const ProductDetail = () => {
   ) || [`https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=800&h=600&fit=crop`];
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-blue-50">
       <Header />
       
       {/* Breadcrumb */}
       <section className="bg-white border-b py-4">
         <div className="container mx-auto px-4">
           <div className="flex items-center space-x-2 text-gray-600">
-            <Link to="/" className="hover:text-red-600">Startseite</Link>
+            <Link to="/" className="hover:text-blue-600">Startseite</Link>
             <span>/</span>
-            <Link to="/galerie" className="hover:text-red-600">Galerie</Link>
+            <Link to="/galerie" className="hover:text-blue-600">Galerie</Link>
             <span>/</span>
             <span className="text-gray-800">{product.title}</span>
           </div>
@@ -116,37 +116,37 @@ const ProductDetail = () => {
               <div>
                 <Link 
                   to="/galerie"
-                  className="inline-flex items-center space-x-2 text-red-600 hover:text-red-800 mb-4"
+                  className="inline-flex items-center space-x-2 text-blue-600 hover:text-blue-800 mb-4"
                 >
                   <ArrowLeft className="h-4 w-4" />
                   <span>Zurück zur Galerie</span>
                 </Link>
                 
                 <h1 className="text-4xl font-bold text-gray-800 mb-2">{product.title}</h1>
-                <p className="text-xl text-red-600 font-medium">von {product.artist}</p>
+                <p className="text-xl text-blue-600 font-medium">von {product.artist}</p>
               </div>
 
-              <div className="grid grid-cols-3 gap-4 p-4 bg-gradient-to-r from-red-50 to-yellow-50 rounded-lg">
+              <div className="grid grid-cols-3 gap-4 p-4 bg-gradient-to-r from-blue-50 to-white rounded-lg">
                 <div className="text-center">
-                  <Calendar className="h-6 w-6 text-red-600 mx-auto mb-2" />
+                  <Calendar className="h-6 w-6 text-blue-600 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Jahr</p>
                   <p className="font-bold">{product.year || 'Unbekannt'}</p>
                 </div>
                 <div className="text-center">
-                  <Ruler className="h-6 w-6 text-red-600 mx-auto mb-2" />
+                  <Ruler className="h-6 w-6 text-blue-600 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Maße</p>
                   <p className="font-bold">{product.dimensions || 'Nicht angegeben'}</p>
                 </div>
                 <div className="text-center">
-                  <Palette className="h-6 w-6 text-red-600 mx-auto mb-2" />
+                  <Palette className="h-6 w-6 text-blue-600 mx-auto mb-2" />
                   <p className="text-sm text-gray-600">Technik</p>
                   <p className="font-bold">{product.technique || 'Nicht angegeben'}</p>
                 </div>
               </div>
 
-              <div className="bg-white p-6 rounded-lg border-2 border-red-200">
+              <div className="bg-white p-6 rounded-lg border-2 border-blue-200">
                 <div className="flex items-center justify-between mb-4">
-                  <span className="text-3xl font-bold text-red-700">{product.price}€</span>
+                  <span className="text-3xl font-bold text-blue-700">{product.price}€</span>
                   <div className="flex items-center space-x-2">
                     <button 
                       onClick={handleToggleLike}
@@ -193,7 +193,7 @@ const ProductDetail = () => {
                     
                     <button 
                       onClick={handleAddToCart}
-                      className="w-full bg-gradient-to-r from-red-600 to-red-700 text-white py-3 rounded-lg font-bold hover:from-red-700 hover:to-red-800 transition-all duration-200 flex items-center justify-center space-x-2"
+                      className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3 rounded-lg font-bold hover:from-blue-700 hover:to-blue-800 transition-all duration-200 flex items-center justify-center space-x-2"
                     >
                       <ShoppingCart className="h-5 w-5" />
                       <span>In den Warenkorb ({(parseFloat(product.price.toString()) * quantity).toFixed(2)}€)</span>
@@ -201,7 +201,7 @@ const ProductDetail = () => {
                   </div>
                 ) : (
                   <div className="text-center py-4">
-                    <p className="text-red-600 font-bold">Derzeit nicht verfügbar</p>
+                    <p className="text-blue-600 font-bold">Derzeit nicht verfügbar</p>
                     <button className="mt-2 bg-gray-400 text-white py-2 px-6 rounded-lg cursor-not-allowed">
                       Benachrichtigen wenn verfügbar
                     </button>
@@ -210,7 +210,7 @@ const ProductDetail = () => {
               </div>
 
               {product.category && (
-                <div className="inline-block bg-red-600 text-white px-4 py-2 rounded-full text-sm font-bold">
+                <div className="inline-block bg-blue-600 text-white px-4 py-2 rounded-full text-sm font-bold">
                   {product.category}
                 </div>
               )}
@@ -219,13 +219,13 @@ const ProductDetail = () => {
 
           {/* Tabs Section */}
           <div className="mt-16">
-            <div className="border-b border-gray-200">
+            <div className="border-b border-blue-200">
               <nav className="flex space-x-8">
                 <button 
                   onClick={() => setActiveTab('description')}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'description'
-                      ? 'border-red-500 text-red-600'
+                      ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
                 >
@@ -235,7 +235,7 @@ const ProductDetail = () => {
                   onClick={() => setActiveTab('details')}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'details'
-                      ? 'border-red-500 text-red-600'
+                      ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
                 >
@@ -245,7 +245,7 @@ const ProductDetail = () => {
                   onClick={() => setActiveTab('shipping')}
                   className={`py-4 px-1 border-b-2 font-medium text-sm ${
                     activeTab === 'shipping'
-                      ? 'border-red-500 text-red-600'
+                      ? 'border-blue-500 text-blue-600'
                       : 'border-transparent text-gray-500 hover:text-gray-700'
                   }`}
                 >

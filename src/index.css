@@ -17,6 +17,7 @@
     font-family: 'Inter', sans-serif;
     font-weight: 400;
     line-height: 1.6;
+    background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 50%, #dbeafe 100%);
   }
   
   h1, h2, h3, h4, h5, h6 {
@@ -41,37 +42,37 @@
 @layer utilities {
   /* Gradient text effect */
   .gradient-text {
-    @apply bg-gradient-to-r from-amber-400 via-yellow-500 to-amber-600 bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 bg-clip-text text-transparent;
   }
   
   /* Luxury button */
   .luxury-button {
-    @apply bg-gradient-to-r from-amber-500 to-yellow-600 text-black font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-2xl;
+    @apply bg-gradient-to-r from-blue-500 to-blue-600 text-white font-bold px-8 py-4 rounded-full transition-all duration-300 transform hover:scale-105 hover:shadow-xl;
   }
   
   /* Glass effect */
   .glass-effect {
-    @apply bg-white/10 backdrop-blur-md border border-white/20;
+    @apply bg-white/20 backdrop-blur-md border border-white/30;
   }
   
   /* Glow effect */
-  .glow-amber {
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+  .glow-blue {
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
   }
   
   /* Professional card */
   .professional-card {
-    @apply bg-gradient-to-br from-gray-900 to-black border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 hover:border-amber-400/50 hover:shadow-2xl hover:-translate-y-2;
+    @apply bg-gradient-to-br from-white to-blue-50 border border-blue-200 rounded-2xl overflow-hidden transition-all duration-500 hover:border-blue-400 hover:shadow-xl hover:-translate-y-2;
   }
   
   /* Elegant text shadow */
   .elegant-text-shadow {
-    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
   /* Premium gradient background */
   .premium-bg {
-    background: linear-gradient(135deg, #0f172a 0%, #1e293b 25%, #334155 50%, #475569 75%, #64748b 100%);
+    background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 25%, #bae6fd 50%, #7dd3fc 75%, #38bdf8 100%);
   }
   
   /* Line clamp utilities */
@@ -96,22 +97,22 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #dbeafe;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #f59e0b, #eab308);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(135deg, #d97706, #ca8a04);
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
 }
 
 /* Selection color */
 ::selection {
-  background: rgba(245, 158, 11, 0.3);
-  color: white;
+  background: rgba(59, 130, 246, 0.3);
+  color: #1e40af;
 }
 
 /* Smooth scrolling */
@@ -144,10 +145,10 @@ html {
 
 @keyframes luxuryGlow {
   0%, 100% { 
-    box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
   }
   50% { 
-    box-shadow: 0 0 40px rgba(245, 158, 11, 0.6);
+    box-shadow: 0 0 40px rgba(59, 130, 246, 0.6);
   }
 }
 
@@ -169,7 +170,7 @@ input:focus,
 textarea:focus,
 select:focus {
   outline: none;
-  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.3);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
 }
 
 /* Professional typography scale */
@@ -197,12 +198,12 @@ select:focus {
 }
 
 .modal-content::-webkit-scrollbar-track {
-  background: rgba(30, 41, 59, 0.5);
+  background: rgba(219, 234, 254, 0.5);
   border-radius: 3px;
 }
 
 .modal-content::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, #f59e0b, #eab308);
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
   border-radius: 3px;
 }
 
@@ -220,18 +221,18 @@ select:focus {
 /* Dark theme optimizations */
 @media (prefers-color-scheme: dark) {
   body {
-    color-scheme: dark;
+    color-scheme: light;
   }
 }
 
 /* High contrast mode support */
 @media (prefers-contrast: high) {
   .professional-card {
-    @apply border-2 border-white/30;
+    @apply border-2 border-blue-400;
   }
   
   .luxury-button {
-    @apply border-2 border-amber-400;
+    @apply border-2 border-blue-500;
   }
 }
 

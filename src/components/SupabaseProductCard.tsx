@@ -73,7 +73,7 @@ const SupabaseProductCard: React.FC<SupabaseProductCardProps> = ({ product }) =>
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-2xl group border border-gray-200 hover:border-amber-400">
+    <div className="bg-white rounded-2xl shadow-lg overflow-hidden transform transition-all duration-500 hover:scale-105 hover:shadow-xl group border border-gray-100 hover:border-blue-300">
       <div className="relative overflow-hidden h-64">        
         <img 
           src={imageUrl}
@@ -81,12 +81,12 @@ const SupabaseProductCard: React.FC<SupabaseProductCardProps> = ({ product }) =>
           className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
         />
         
-        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-70 opacity-40"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-transparent to-transparent transition-opacity duration-300 group-hover:opacity-50 opacity-20"></div>
         
         <div className="absolute inset-0 flex items-center justify-center space-x-4 transition-opacity duration-300 opacity-0 group-hover:opacity-100">
           <Link 
             to={`/produkt/${product.id}`}
-            className="bg-white/90 text-gray-800 p-3 rounded-full hover:bg-amber-400 hover:text-white transition-colors duration-200"
+            className="bg-white/90 text-gray-800 p-3 rounded-full hover:bg-blue-500 hover:text-white transition-colors duration-200"
           >
             <Eye className="h-5 w-5" />
           </Link>
@@ -102,13 +102,13 @@ const SupabaseProductCard: React.FC<SupabaseProductCardProps> = ({ product }) =>
           </button>
           <button 
             onClick={handleAddToCart}
-            className="bg-amber-400 text-white p-3 rounded-full hover:bg-amber-500 transition-colors duration-200"
+            className="bg-blue-500 text-white p-3 rounded-full hover:bg-blue-600 transition-colors duration-200"
           >
             <ShoppingCart className="h-5 w-5" />
           </button>
         </div>
         
-        <div className="absolute top-3 right-3 bg-amber-500 text-white px-3 py-1 rounded-full text-sm font-bold">
+        <div className="absolute top-3 right-3 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold">
           {product.year}
         </div>
 
@@ -124,13 +124,13 @@ const SupabaseProductCard: React.FC<SupabaseProductCardProps> = ({ product }) =>
         <h3 className="text-xl font-bold text-gray-800 mb-3">{product.title}</h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-2">{product.description}</p>
         <div className="flex items-center justify-between">
-          <span className="text-2xl font-bold text-amber-500">€{parseFloat(product.price.toString()).toFixed(2)}</span>
+          <span className="text-2xl font-bold text-blue-600">€{parseFloat(product.price.toString()).toFixed(2)}</span>
           <button 
             onClick={handleAddToCart}
             disabled={!product.in_stock}
             className={`px-6 py-2 rounded-full font-bold transition-all duration-200 transform hover:scale-105 ${
               product.in_stock
-                ? 'bg-gradient-to-r from-amber-500 to-yellow-600 text-white hover:shadow-lg'
+                ? 'bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:shadow-lg'
                 : 'bg-gray-400 text-gray-600 cursor-not-allowed'
             }`}
           >

@@ -87,7 +87,7 @@ const StoryTimeline = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-blue-50 text-gray-800">
       <Header />
       
       {/* Intro Section */}
@@ -100,10 +100,7 @@ const StoryTimeline = () => {
             opacity: heroOpacity
           }}
         />
-        <div className="absolute inset-0 bg-black/70" />
-        
-        {/* Film grain overlay */}
-        <div className="absolute inset-0 opacity-30 mix-blend-multiply ddr-film-grain" />
+        <div className="absolute inset-0 bg-white/40" />
         
         <motion.div
           className="relative z-10 text-center max-w-4xl mx-auto px-4"
@@ -112,7 +109,7 @@ const StoryTimeline = () => {
           transition={{ duration: 2, ease: "easeOut" }}
         >
           <motion.h1
-            className="text-6xl lg:text-8xl font-bold mb-8 font-mono text-red-400"
+            className="text-6xl lg:text-8xl font-bold mb-8 font-mono text-blue-600"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2, delay: 0.5 }}
@@ -121,7 +118,7 @@ const StoryTimeline = () => {
           </motion.h1>
           
           <motion.blockquote
-            className="text-2xl lg:text-4xl italic mb-12 text-gray-300 font-serif leading-relaxed"
+            className="text-2xl lg:text-4xl italic mb-12 text-gray-700 font-serif leading-relaxed"
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 2, delay: 1 }}
@@ -130,7 +127,7 @@ const StoryTimeline = () => {
           </motion.blockquote>
           
           <motion.p
-            className="text-lg text-gray-400 font-mono"
+            className="text-lg text-gray-600 font-mono"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 2, delay: 1.5 }}
@@ -147,25 +144,15 @@ const StoryTimeline = () => {
           animate={{ y: [0, 10, 0] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
-          <div className="w-px h-16 bg-gradient-to-b from-transparent via-red-400 to-transparent" />
+          <div className="w-px h-16 bg-gradient-to-b from-transparent via-blue-400 to-transparent" />
         </motion.div>
       </section>
 
       {/* Timeline Section */}
-      <section ref={timelineRef} className="relative py-20 bg-gradient-to-b from-gray-900 via-gray-800 to-black">
-        {/* Background pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div 
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23dc2626' fill-opacity='0.1'%3E%3Cpath d='M30 30l30-30H30zM0 30l30 30v-30z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-            }}
-          />
-        </div>
-
+      <section ref={timelineRef} className="relative py-20 bg-gradient-to-b from-white via-blue-50 to-white">
         <div className="container mx-auto px-4 relative z-10">
           <motion.h2
-            className="text-4xl font-bold text-center mb-16 font-mono text-red-400"
+            className="text-4xl font-bold text-center mb-16 font-mono text-blue-600"
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
@@ -176,7 +163,7 @@ const StoryTimeline = () => {
 
           {/* Central Timeline Line */}
           <div className="relative max-w-6xl mx-auto">
-            <div className="absolute left-1/2 transform -translate-x-0.5 top-0 bottom-0 w-1 bg-gradient-to-b from-red-800 via-gray-500 to-red-800" />
+            <div className="absolute left-1/2 transform -translate-x-0.5 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 via-gray-400 to-blue-500" />
 
             {timelineData.map((item, index) => (
               <TimelineItem 
@@ -191,12 +178,12 @@ const StoryTimeline = () => {
       </section>
 
       {/* Anchor Moment: Stasi Interrogation */}
-      <section className="anchor-moment relative min-h-screen flex items-center justify-center overflow-hidden bg-black">
+      <section className="anchor-moment relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-r from-blue-50 to-white">
         <div 
-          className="anchor-bg absolute inset-0 bg-cover bg-center opacity-30"
+          className="anchor-bg absolute inset-0 bg-cover bg-center opacity-20"
           style={{ backgroundImage: `url('/lovable-uploads/9d51a39b-d5c5-404e-a135-356b6d63ed7c.png')` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-transparent to-black" />
+        <div className="absolute inset-0 bg-gradient-to-r from-white/50 via-transparent to-white/50" />
         
         <motion.div
           className="anchor-text relative z-10 max-w-4xl mx-auto text-center px-4 opacity-0 transform translate-y-10"
@@ -205,13 +192,13 @@ const StoryTimeline = () => {
           transition={{ duration: 2 }}
           viewport={{ once: true }}
         >
-          <h3 className="text-5xl lg:text-7xl font-bold mb-8 font-mono text-red-500">
+          <h3 className="text-5xl lg:text-7xl font-bold mb-8 font-mono text-blue-600">
             1983
           </h3>
-          <h4 className="text-3xl lg:text-4xl mb-8 text-gray-300 font-serif italic">
+          <h4 className="text-3xl lg:text-4xl mb-8 text-gray-700 font-serif italic">
             Das Verhör
           </h4>
-          <p className="text-xl text-gray-400 leading-relaxed font-mono max-w-3xl mx-auto">
+          <p className="text-xl text-gray-600 leading-relaxed font-mono max-w-3xl mx-auto">
             "Sie fragten nach jedem Pinselstrich, nach jeder Farbe. 
             Als ob sie meine Seele sezieren wollten. Aber sie verstanden nicht, 
             dass Kunst keine Sprache ist, die man übersetzen kann."
@@ -228,9 +215,9 @@ const StoryTimeline = () => {
       </section>
 
       {/* Final Section: "Und danach?" */}
-      <section className="relative py-32 bg-gradient-to-b from-black to-gray-900 overflow-hidden">
+      <section className="relative py-32 bg-gradient-to-b from-white to-blue-50 overflow-hidden">
         <div 
-          className="absolute inset-0 opacity-20"
+          className="absolute inset-0 opacity-10"
           style={{ 
             backgroundImage: `url('/lovable-uploads/6b4b9caa-abc7-4569-b88f-fe10c6eb2d1d.png')`,
             backgroundSize: 'cover',
@@ -246,11 +233,11 @@ const StoryTimeline = () => {
             transition={{ duration: 2 }}
             viewport={{ once: true }}
           >
-            <h2 className="text-5xl lg:text-6xl font-bold mb-12 font-mono text-red-400">
+            <h2 className="text-5xl lg:text-6xl font-bold mb-12 font-mono text-blue-600">
               Und danach?
             </h2>
             
-            <div className="space-y-8 text-xl text-gray-300 leading-relaxed font-serif">
+            <div className="space-y-8 text-xl text-gray-700 leading-relaxed font-serif">
               <p>
                 Als die Mauer fiel, fiel auch ein Teil ihrer Identität. 
                 Der Widerstand, der ihre Kunst genährt hatte, war plötzlich überflüssig.
@@ -259,23 +246,23 @@ const StoryTimeline = () => {
                 In der neuen Freiheit suchte sie nach einer neuen Sprache. 
                 Die Farben wurden heller, die Formen weicher.
               </p>
-              <p className="text-2xl text-red-400 font-bold">
+              <p className="text-2xl text-blue-600 font-bold">
                 Aber die Erinnerung blieb. In jedem Werk.
               </p>
             </div>
 
             <motion.div
-              className="mt-16 p-8 bg-black/50 rounded-lg backdrop-blur-sm border border-red-800/30"
+              className="mt-16 p-8 bg-white/80 rounded-lg backdrop-blur-sm border border-blue-200"
               initial={{ opacity: 0, scale: 0.9 }}
               whileInView={{ opacity: 1, scale: 1 }}
               transition={{ duration: 1, delay: 0.5 }}
               viewport={{ once: true }}
             >
-              <blockquote className="text-2xl italic text-gray-300 mb-4">
+              <blockquote className="text-2xl italic text-gray-700 mb-4">
                 "Kunst ist das Gedächtnis der Menschheit. 
                 Meine Werke sind Zeugen einer Zeit, die nie vergessen werden darf."
               </blockquote>
-              <cite className="text-red-400 font-mono">
+              <cite className="text-blue-600 font-mono">
                 — Letztes Interview, 1995
               </cite>
             </motion.div>
